@@ -2,13 +2,14 @@
 
 #include<stdio.h>
 #include<string.h>
+#include <stdlib.h>
 #define peomax 100 
 #define namemax 20
 #define sexmax 5
 #define postmax 100
 #define telemax 13
 //草单
-void muen();
+void mune();
 
  typedef  struct peo {
 	char name[namemax];
@@ -18,13 +19,13 @@ void muen();
 	char tele[telemax];
 }peo;
  typedef struct contact {
-	 peo data[100];
+	 peo data[peomax];
 	 int sz;
  }con;
  //函数初始化
  void initcon(con*);
  //查询人员
- int SerByName(char*, con*);
+ int SerByName(const char*, const con*);
 
  
  //增加人员
@@ -32,10 +33,13 @@ void muen();
  //删除
  void del(con*);
  //查询并展示
- void serch(con*);
+ void serch(const con*);
  //修改
  void motify(con*);
  //展示
- void show(con*);
-
+ void show(const con*);
+ //比较
+ int cmpbyname(void* , void* );
+ //排序
+ void sort(con*);
 

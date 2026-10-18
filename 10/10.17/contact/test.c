@@ -11,34 +11,39 @@ int main() {
 		
 			mune();
 			printf("请选择模式");
-			scanf("$d", &ch);
+			scanf("%d", &ch);
 			switch (ch) {
-			case1:
+			case 1:
 				add(&on);
 				break;
-			case2:
+			case 2:
 				del(&on);
 				break;
-			case3:
+			case 3:
 				serch(&on);
 				break;
-			case4:
+			case 4:
 				motify(&on);
 				break;
-			case5:
+			case 5:
 				show(&on);
 				break;
-			
+			case 6:
+				sort(&on);
+				break;
+			case 0:
+				printf("退出");
+					break;
 			
 		
 			default:
-				printf("打印错误\n");
+				printf("输入错误\n");
 			}
 
 
 
 		} while (ch);
-		printf("退出\n");
+		
 
 
 
