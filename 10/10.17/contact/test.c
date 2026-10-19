@@ -43,6 +43,7 @@ int main() {
 
 
 		} while (ch);
+		freecon(&on);
 		
 
 

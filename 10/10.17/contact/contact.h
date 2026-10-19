@@ -8,6 +8,8 @@
 #define sexmax 5
 #define postmax 100
 #define telemax 13
+#define defsz 3
+#define inc_size 2
 //草单
 void mune();
 
@@ -18,12 +20,24 @@ void mune();
 	char post[postmax];
 	char tele[telemax];
 }peo;
- typedef struct contact {
-	 peo data[peomax];
+ //静态版本创建通寻录
+ //typedef struct contact {
+	// peo data[peomax];
+	// int sz;
+ //}con;
+ //动态版创建声明
+ typedef struct con {
+	 peo* data;
 	 int sz;
+	 int cap;
+
  }con;
- //函数初始化
+ //函数动态初始化
  void initcon(con*);
+ //函数静态初始化
+ //void initcon(con*);
+ // 释放空间
+ void freecon(con*);
  //查询人员
  int SerByName(const char*, const con*);
 
@@ -39,7 +53,7 @@ void mune();
  //展示
  void show(const con*);
  //比较
- int cmpbyname(void* , void* );
+ int cmpbyname(const void* , const void* );
  //排序
  void sort(con*);
 
