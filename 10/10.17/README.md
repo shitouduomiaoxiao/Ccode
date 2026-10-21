@@ -1,38 +1,49 @@
 # 10.17 通讯录项目 · 版本记录
 
-课程练习工程（自动控制原理Ⅱ / C 语言程序设计练习），按日期迭代，**新旧版本全部保留**。
+课程练习工程，按日期迭代，**新旧版本全部保留**。
 
 | 版本 | 日期 | 目录 | 概要 |
 | --- | --- | --- | --- |
-| **v3（最新）** | 2026-10-19 | [`contact/`](contact/) | **动态内存版**：`calloc / realloc / free`，容量按需增长 |
-| v2 | 2026-10-18 | [`v2-20261018/`](v2-20261018/) | 静态数组版修复：删除/排序逻辑、`const` 签名、`qsort` 按姓名排序 |
+| **v4（最新）** | 2026-10-21 | [`contact/`](contact/) | **文件读写版**：动态内存 + 二进制存取 `c.txt` |
+| v3 | 2026-10-19 | [`v3-20261019/`](v3-20261019/) | 动态内存版：`calloc / realloc / free`，容量按需增长 |
+| v2 | 2026-10-18 | [`v2-20261018/`](v2-20261018/) | 静态数组版修复：删除/排序逻辑、`const` 签名、`qsort` 排序 |
 | v1 | 2026-10-17 | [`v1-20261017/`](v1-20261017/) | 静态数组版初版：`peo data[100]` + `int sz` |
 
-## v3（动态版）关键变化
+## v4（文件读写版）关键变化
+
+| 功能 | 实现 |
+| --- | --- |
+| 程序启动 | `fliein(&on)`：从 `c.txt` 逐条 `fread` 读入，边读边 `addn()` 扩容 |
+| 程序退出 | `flieput(&on)`：`fwrite` 一次性写回，然后 `freecon()` 释放内存 |
+| 扩容 | `addn()`：`sz == cap` 时 `realloc` 增长 `inc_size = 2` |
+| 输入安全 | 所有 `scanf` 带宽度：`%19s` 姓名 / `%4s` 性别 / `%99s` 地址 / `%12s` 电话 |
 
 ```c
-/* v1 / v2：静态数组 */
-typedef struct contact { peo data[peomax]; int sz; } con;
-
-/* v3：动态扩容 */
-typedef struct con { peo* data; int sz; int cap; } con;
+void fliein(con* p) {
+    peo tmp = { 0 };
+    FILE* fp = fopen("c.txt", "rb");     /* 必须二进制模式 */
+    if (fp == NULL) { perror("fopen"); return; }   /* 失败直接返回，别走到 fclose */
+    while (fread(&tmp, sizeof(peo), 1, fp) == 1) {
+        addn(p);
+        p->data[p->sz++] = tmp;
+    }
+    fclose(fp);
+}
 ```
 
-- `initcon()`：`calloc(defsz=3, sizeof(peo))` 申请初始容量
-- `add()`：`sz == cap` 时 `realloc(data, sizeof(peo) * (cap + inc_size))`，每次扩 2 个
-- `freecon()`：退出前 `free(data)`，避免内存泄漏
-- 静态版实现以注释形式保留在源码里，便于对照学习
+### 数据文件 `c.txt`
+
+- 位置：**程序的工作目录**（VS 里按 F5 时 = 项目目录 `contact/`）
+- 格式：`struct peo` 的原始二进制，一条 144 字节，不含文件头
+- 不入库：已在 `.gitignore` 中忽略（文件里含姓名、电话等个人信息）
+- 若删除该文件，程序下次启动会提示 `fopen: No such file or directory` 并按空通讯录运行
 
 ## 编译运行
 
-Visual Studio 2017+ 打开 `contact.sln`，`x64 / Debug` 生成运行；或命令行：
+VS 打开 `contact.sln`，`x64 / Debug` 生成后 **Ctrl+F5 运行**（工作目录＝项目目录，才能找到 `c.txt`）。
 
-```bat
-cl contact.c test.c /Fe:contact.exe
-```
+## 已知待改进
 
-## 已知可改进项
-
-- `serch()` 未判断 `SerByName()` 返回 `-1`（查不到时会用 -1 当前标）
-- `scanf("%s")` 未限制宽度：建议 `%19s`（name）、`%4s`（sex）、`%99s`（post）、`%12s`（tele）
-- 输入菜单时若输入非数字，`scanf("%d")` 失败会反复打印菜单
+- `age` 用了 `%3d`，只能输入 3 位数字；若输入 4 位（如 2024），多余字符会残留并被下一个 `scanf` 读取，导致后续字段错位。建议改回 `%d`
+- 超长输入（如姓名 25 个字符）会被 `%19s` 截断，剩余字符同样会残留并错位；可在每次输入后清空缓冲区
+- 数据文件为结构体裸二进制，含填充字节，跨平台/改结构体后不可读；如需兼容可改为文本格式

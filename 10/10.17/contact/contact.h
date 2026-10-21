@@ -10,8 +10,8 @@
 #define telemax 13
 #define defsz 3
 #define inc_size 2
-//草单
-void mune();
+//菜单
+void menu();
 
  typedef  struct peo {
 	char name[namemax];
@@ -41,7 +41,8 @@ void mune();
  //查询人员
  int SerByName(const char*, const con*);
 
- 
+ //扩容
+ void addn(con*);
  //增加人员
  void add(con*);
  //删除
@@ -56,4 +57,9 @@ void mune();
  int cmpbyname(const void* , const void* );
  //排序
  void sort(con*);
+ //读取文件 
+  
+ void fliein(con*);
+ //存入文件
+ void flieput(con* );
 

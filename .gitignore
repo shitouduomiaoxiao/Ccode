@@ -58,3 +58,6 @@ cmake_install.cmake
 Makefile
 build/
 out/
+
+# 通讯录数据文件（含个人信息，不入库）
+c.txt

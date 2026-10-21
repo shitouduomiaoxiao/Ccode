@@ -7,10 +7,12 @@ int main() {
 	con on;
 	//初始化
 	initcon(&on);
+	fliein(&on);
+
 		do {
 		
-			mune();
-			printf("请选择模式");
+			menu();
+			printf("请选择模式\n");
 			scanf("%d", &ch);
 			switch (ch) {
 			case 1:
@@ -32,7 +34,7 @@ int main() {
 				sort(&on);
 				break;
 			case 0:
-				printf("退出");
+				printf("退出\n");
 					break;
 			
 		
@@ -43,6 +45,7 @@ int main() {
 
 
 		} while (ch);
+		flieput(&on);
 		freecon(&on);
 		
 

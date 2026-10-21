@@ -1,6 +1,6 @@
 #define  _CRT_SECURE_NO_WARNINGS
 #include"contact.h"
-void mune() {
+void menu() {
 	printf("******************************************\n");
 	printf("************1.add   2.del*****************\n");
 	printf("************3.serch 4.motify**************\n");
@@ -38,7 +38,7 @@ int SerByName (const char*name, const con*p) {
 			return pos;
 		}
 	}
-	printf("未找到该人员");
+	printf("未找到该人员\n");
 	return -1;
 
 }
@@ -49,8 +49,8 @@ void freecon(con* p) {
 	p->sz = 0;
 	p->cap = 0;
 }
-//动态增加人员
-void add(con* p) {
+//扩容
+void addn(con* p) {
 	if (p->sz == p->cap) {
 		
 		peo* ptr = (peo*)realloc(p->data, sizeof(peo) * (p->cap+inc_size));
@@ -64,18 +64,23 @@ void add(con* p) {
 		}
 			p->cap += inc_size;
 	}
-	
 
+}
+//动态增加人员
+void add(con* p) {
+	
+	
+		addn(p);
 		printf("请输入名字\n");
-		scanf("%s", p->data[p->sz].name);
+		scanf("%19s", p->data[p->sz].name);
 		printf("请输入年龄\n");
-		scanf("%d", &p->data[p->sz].age);
+		scanf("%3d", &p->data[p->sz].age);
 		printf("请输入性别\n");
-		scanf("%s", p->data[p->sz].sex);
+		scanf("%4s", p->data[p->sz].sex);
 		printf("请输入地址\n");
-		scanf("%s", p->data[p->sz].post);
+		scanf("%99s", p->data[p->sz].post);
 		printf("请输入电话\n");
-		scanf("%s", p->data[p->sz].tele);
+		scanf("%13s", p->data[p->sz].tele);
 		p->sz++;
 
 	
@@ -103,11 +108,11 @@ void add(con* p) {
 void del( con* p) {
 	//查找
 	char name[20] = { 0 };
-	printf("请输入你要找的名字");
-	scanf("%s", &name[0]);
+	printf("请输入你要找的名字\n");
+	scanf("%19s", &name[0]);
 	int pos=SerByName(&name[0],p);
 	if (pos == -1) {
-		printf("查找失败");
+		printf("查找失败\n");
 		return;
 	}
 	for (int i=pos; i < p->sz-1; i++) {
@@ -115,9 +120,9 @@ void del( con* p) {
 		
 	}
 	p->sz--;
-		printf("成功");
+		printf("成功\n");
 	if (p->sz == 0) {
-		printf("通讯录已空");
+		printf("通讯录已空\n");
 		return;
 
 	}
@@ -125,9 +130,12 @@ void del( con* p) {
 //查找
 void serch(const con* p) {
 	char name[20] = { 0 };
-	printf("请输入你要找的名字");
-	scanf("%s", &name[0]);
+	printf("请输入你要找的名字\n");
+	scanf("%19s", &name[0]);
 	int pos = SerByName(&name[0], p);
+	if (pos == -1) {
+		return;
+	}
 	
 	printf("%-20s\t%-4d\t%-5s\t%-10s\t%-13s\n",
 		p->data[pos].name,
@@ -141,23 +149,23 @@ void serch(const con* p) {
 //修改
 void motify(con* p) {
 	char name[20] = { 0 };
-	printf("请输入你要找的名字");
-	scanf("%s", &name[0]);
+	printf("请输入你要找的名字\n");
+	scanf("%19s", &name[0]);
 	int pos = SerByName(&name[0], p);
 	if (pos == -1) {
-		printf("查找失败");
+		printf("查找失败\n");
 		return;
 	}
 	printf("请输入名字\n");
-	scanf("%s", p->data[pos].name);
+	scanf("%19s", p->data[pos].name);
 	printf("请输入年龄\n");
-	scanf("%d", &p->data[pos].age);
+	scanf("%3d", &p->data[pos].age);
 	printf("请输入性别\n");
-	scanf("%s", p->data[pos].sex);
+	scanf("%4s", p->data[pos].sex);
 	printf("请输入地址\n");
-	scanf("%s", p->data[pos].post);
+	scanf("%99s", p->data[pos].post);
 	printf("请输入电话\n");
-	scanf("%s", p->data[pos].tele);
+	scanf("%13s", p->data[pos].tele);
 
 
 }
@@ -181,4 +189,42 @@ int cmpbyname(const void*e1,const void*e2) {
 //排序
 void sort(con* p) {
 	qsort(p->data, p->sz, sizeof(p->data[0]), cmpbyname);
+}
+//读取文件
+void fliein(con* p) {
+	peo ptr = { 0 };
+	FILE* fp = NULL;
+		fp = fopen("c.txt", "rb");
+if (fp == NULL) {
+		perror("fopen");
+		return;
+	}
+else {
+	while (fread(&ptr, sizeof(p->data[0]), 1, fp))
+	{
+		addn(p);
+		p->data[p->sz] = ptr;
+		p->sz++;
+	}
+}
+fclose(fp);
+fp = NULL;
+	
+
+}
+//存入文件
+void flieput(con* p) {
+	FILE* fp=NULL;
+	fp = fopen("c.txt", "wb");
+	if (fp == NULL) {
+		perror("fopen");
+		return;
+	}
+	
+	else {
+		fwrite(p->data, sizeof(p->data[0]), p->sz, fp);
+	}
+	fclose(fp);
+	fp = NULL;
+
 }
