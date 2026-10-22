@@ -7,7 +7,7 @@
 #define namemax 20
 #define sexmax 5
 #define postmax 100
-#define telemax 13
+#define telemax 14
 #define defsz 3
 #define inc_size 2
 //²Ëµ¥
