@@ -10,6 +10,7 @@
 //		return 0;
 //	}
 //}
+//
 void *my_memmove(void* dst, void* src, int count) {
 	void* ret = dst;
 	
