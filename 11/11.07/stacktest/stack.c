@@ -1,7 +1,7 @@
 #define  _CRT_SECURE_NO_WARNINGS
 #include"stack.h"
 void STInit(ST* st) {
-	ST* tmp = (ST*)malloc(sizeof(ST) * CAPACITE);
+	Datatype* tmp = (Datatype*)malloc(sizeof(Datatype) * CAPACITE);
 	if (tmp == NULL) {
 		perror("malloc");
 		return;
@@ -17,13 +17,13 @@ void STDestroy(ST* st) {
 	st->top = 0;
 
 }
-bool STEmpt(ST* st) {
+bool STEtmpy(ST* st) {
 	return st->top == 0;
 }
 void STpush(ST* st, Datatype x) {
 	assert(st);
 	if (st->top == st->capacity) {
-		ST* tmp = (ST*)realloc(st->a, sizeof(ST) * CAPACITE * 2);
+		Datatype* tmp = (Datatype*)realloc(st->a, sizeof(Datatype) * st->capacity* 2);
 		if (tmp == NULL) {
 			perror("realloc");
 			return;
@@ -36,10 +36,11 @@ void STpush(ST* st, Datatype x) {
 }
 void STpop(ST* st) {
 	assert(st);
-	assert(!STEmpt(st));
+	assert(!STEtmpy(st));
 	st->top--;
 }
 Datatype StackTop(ST* st) {
 	assert(st);
+	assert(!STEtmpy(st));
 	return st->a[st->top - 1];
 }

@@ -12,7 +12,7 @@ typedef struct Stack {
 }ST;
 void STInit(ST*);
 void STDestroy(ST*);
-void STopush(ST*,Datatype);
+void STpush(ST*,Datatype);
 void STpop(ST*);
 Datatype StackTop(ST*);
 bool STEtmpy(ST*);

@@ -7,7 +7,7 @@ int main() {
 	STpush(&st, 2);
 	STpush(&st, 3);
 	STpush(&st, 4);
-	while (!STEmpt(&st)) {
+	while (!STEtmpy(&st)) {
 		printf("  %d", StackTop(&st));
 		STpop(&st);
 	}
